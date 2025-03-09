@@ -1,0 +1,167 @@
+//Завдання 1 
+print("Hello, World!")
+
+
+
+//Завдання 2
+// 1. Ціле десяткове число 12 з мінімальною розрядною сіткою (Int8 достатній, оскільки -128...127)
+let number1: Int8 = 12
+
+// 2. Ціле десяткове число -100 з мінімальною розрядною сіткою (Int8 адекватний для значення -100)
+let number2: Int8 = -100
+
+// 3. Ціле шістнадцяткове число, що рівне десятковому числу 128.
+// Для цілого 128 не підійде Int8 (максимум 127), тому використовуємо UInt8,
+// який має діапазон 0...255. Запис у шістнадцятковій системі: 0x80.
+let hexNumber: UInt8 = 0x80
+
+// 4. Мінімальне десяткове значення для 16-розрядної сітки (Int16).
+// Для типу Int16 мінімальне значення – -32768.
+let minInt16: Int16 = Int16.min  // або let minInt16: Int16 = -32768
+
+// 5. Максимальне десяткове значення для 64-розрядної сітки (Int64).
+// Для типу Int64 максимальне значення – 9223372036854775807.
+let maxInt64: Int64 = Int64.max  // або let maxInt64: Int64 = 9223372036854775807
+
+// 6. Число з плаваючою крапкою 10,235.34 з мінімальною розрядною сіткою.
+// Для цього прикладу достатньо 32-бітного Float (значення: 10235.34).
+let floatNumber: Float = 10235.34
+
+// 7. Символ "а"
+let letter: Character = "a"
+
+// 8. Рядок "Hello World"
+let greeting: String = "Hello World"
+
+// 9. Істина
+let isTrue: Bool = true
+
+// 10. Число 12 та його рядкове представлення "twelve"
+// Використовуємо кортеж для об’єднання числового значення та його текстового представлення.
+let numberAndString: (Int8, String) = (12, "twelve")
+
+
+
+//Завдання 3
+import Foundation
+
+// Initial string
+var str = "Hello World. This is Swift programming language"
+
+// 1. Print the length of the string.
+print("Initial string: \(str)")
+print("Length: \(str.count)")
+
+// 2. Replace each occurrence of the character "i" with "u".
+str = str.replacingOccurrences(of: "i", with: "u")
+print("After replacing 'i' with 'u': \(str)")
+
+// 3. Remove the 4th, 7th, and 10th characters (indexing starts at 1).
+var charArray = Array(str)
+// Remove in descending order (4th -> index 3, 7th -> index 6, 10th -> index 9)
+if charArray.count > 9 { charArray.remove(at: 9) }
+if charArray.count > 6 { charArray.remove(at: 6) }
+if charArray.count > 3 { charArray.remove(at: 3) }
+str = String(charArray)
+print("After removing 4th, 7th, and 10th characters: \(str)")
+
+// 4. Append the string " (modified)".
+str += " (modified)"
+print("After appending \" (modified)\": \(str)")
+
+// 5. Check if the string is empty.
+print("Is the string empty? \(str.isEmpty)")
+
+// 6. Append a period at the end of the string.
+str.append(".")
+print("After appending a period: \(str)")
+
+// 7. Check if the string starts with "Hello".
+print("Starts with \"Hello\"? \(str.hasPrefix("Hello"))")
+
+// 8. Check if the string ends with "world.".
+print("Ends with \"world.\"? \(str.hasSuffix("world."))")
+
+// 9. Insert a '-' character after the 10th character.
+if str.count >= 10 {
+    let insertIndex = str.index(str.startIndex, offsetBy: 10)
+    str.insert("-", at: insertIndex)
+}
+print("After inserting '-' after the 10th character: \(str)")
+
+// 10. Replace the sequence "Thus us" with "It is".
+str = str.replacingOccurrences(of: "Thus us", with: "It is")
+print("After replacing \"Thus us\" with \"It is\": \(str)")
+
+// 11. Print the 10th and 15th characters (indexing starts at 1).
+if str.count >= 15 {
+    let tenthIndex = str.index(str.startIndex, offsetBy: 9)
+    let fifteenthIndex = str.index(str.startIndex, offsetBy: 14)
+    print("10th character: '\(str[tenthIndex])'")
+    print("15th character: '\(str[fifteenthIndex])'")
+}
+
+// 12. Print the substring from the 10th (inclusive) to the 15th (exclusive) character.
+if str.count >= 15 {
+    let start = str.index(str.startIndex, offsetBy: 9)
+    let end = str.index(str.startIndex, offsetBy: 14)
+    let substring = str[start..<end]
+    print("Substring from 10th (inclusive) to 15th (exclusive): '\(substring)'")
+}
+
+
+
+
+//Завдання 4
+// Task 1: Declare an optional integer variable (without a default value)
+var integerNumber: Int?
+
+// Task 2: Declare an optional decimal (floating-point) variable (without a default value)
+var decimalNumber: Double?
+
+// Task 3: Assign a value to integerNumber.
+integerNumber = 10
+
+// Task 4: Add to integerNumber the same value (i.e. double it) using an increment approach.
+// Since Swift no longer supports the ++ operator, we simulate increment by a loop.
+if let value = integerNumber {
+    var temp = value
+    for _ in 0..<value {
+        temp += 1  // equivalent to an increment operation
+    }
+    integerNumber = temp  // now integerNumber is doubled (10 + 10 = 20)
+}
+
+// Task 5: Change the sign of integerNumber using the unary minus operator.
+if let value = integerNumber {
+    integerNumber = -value
+}
+
+// Task 6: Assign the value of integerNumber to decimalNumber (with type conversion).
+if let intValue = integerNumber {
+    decimalNumber = Double(intValue)
+}
+
+// Task 7: Declare an entity 'pairOfValues' that optionally contains values for integerNumber and decimalNumber.
+var pairOfValues: (integer: Int?, decimal: Double?) = (integer: integerNumber, decimal: decimalNumber)
+
+// Task 8: Check if pairOfValues contains an integer value and print it if it exists.
+if let intValue = pairOfValues.integer {
+    print("Pair contains integer: \(intValue)")
+} else {
+    print("Pair does not contain an integer value.")
+}
+
+// Task 9: Check if pairOfValues contains a decimal value and print it if it exists.
+if let decValue = pairOfValues.decimal {
+    print("Pair contains decimal: \(decValue)")
+} else {
+    print("Pair does not contain a decimal value.")
+}
+
+// Task 10: Print the value of decimalNumber using optional binding.
+if let decNumber = decimalNumber {
+    print("decimalNumber: \(decNumber)")
+} else {
+    print("decimalNumber is nil.")
+}
