@@ -1,0 +1,144 @@
+//Завдання 1
+class Person {
+    var name: String
+    var child: Son? 
+
+    init(name: String) {
+        self.name = name
+        print("Initialization Person: \(name)")
+    }
+
+    deinit {
+        print("Deinitialization Person: \(name)")
+    }
+}
+
+class Son {
+    var name: String
+   
+    weak var parent: Person?
+    
+    init(name: String, parent: Person?) {
+        self.name = name
+        self.parent = parent
+        print("Initialization Son: \(name)")
+    }
+
+    deinit {
+        print("Deinitialization Son: \(name)")
+    }
+}
+
+do {
+    let person = Person(name: "John")
+    let son = Son(name: "Mike", parent: person)
+    person.child = son
+}
+
+
+
+
+
+//Завдання 2
+//Частина 1
+class Operand {
+    var number: Int
+    var operand: Operand? 
+    
+    
+    lazy var sumClosure: () -> Int = {
+        return self.number + (self.operand?.number ?? 0)
+    }
+    
+    
+    lazy var sumClosureFixed: () -> Int = { [unowned self] in
+        return self.number + (self.operand?.number ?? 0)
+    }
+    
+    init(number: Int) {
+        self.number = number
+        print("Initialization Operand: \(number)")
+    }
+    
+    deinit {
+        print("Deinitialization Operand: \(number)")
+    }
+}
+
+do {
+    print("Part 1: Problematic closure (retain cycle)")
+    let op1 = Operand(number: 10)
+    op1.operand = Operand(number: 20)
+   
+    print("Sum (problematic): \(op1.sumClosure())")
+   
+}
+
+do {
+    print("Part 1: Fixed closure using unowned")
+    let op1 = Operand(number: 30)
+    op1.operand = Operand(number: 40)
+    
+    print("Sum (fixed): \(op1.sumClosureFixed())")
+    
+}
+
+
+
+
+//Частина 2
+
+class OperandClosureTest {
+    var number: Int
+    var operation: (() -> Void)?
+    
+    init(number: Int) {
+        self.number = number
+        print("Initialization OperandClosureTest: \(number)")
+        
+        operation = {
+            print("Operation: number is \(self.number)")
+        }
+    }
+    
+    deinit {
+        print("Deinitialization OperandClosureTest: \(number)")
+    }
+}
+
+do {
+    print("Part 2: Problematic closure (retain cycle) for OperandClosureTest")
+    var operandTest: OperandClosureTest? = OperandClosureTest(number: 100)
+    operandTest?.operation?()
+    operandTest = nil
+    
+}
+
+
+class OperandClosureTestFixed {
+    var number: Int
+    var operation: (() -> Void)?
+    
+    init(number: Int) {
+        self.number = number
+        print("Initialization OperandClosureTestFixed: \(number)")
+        
+        operation = { [weak self] in
+            if let self = self {
+                print("Operation (fixed): number is \(self.number)")
+            }
+        }
+    }
+    
+    deinit {
+        print("Deinitialization OperandClosureTestFixed: \(number)")
+    }
+}
+
+do {
+    print("Part 2: Fixed closure with weak capture list for OperandClosureTestFixed")
+    var operandTest: OperandClosureTestFixed? = OperandClosureTestFixed(number: 200)
+    operandTest?.operation?()
+    operandTest = nil
+    
+}
