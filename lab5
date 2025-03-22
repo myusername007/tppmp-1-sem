@@ -1,0 +1,249 @@
+//Zavd 1 
+func factorial(of number: Int) -> Int {
+    var result = 1
+    var n = number
+
+    if n < 0 {
+        print("Factorial is not defined for negative numbers.")
+        return -1
+    }
+
+    while n > 1 {
+        result *= n
+        n -= 1
+    }
+
+    return result
+}
+
+// Example usage
+let input = 5
+let result = factorial(of: input)
+print("Factorial of \(input) is \(result)")
+
+
+
+
+//Zavd 2
+enum SortAlgorithm {
+    case bubble
+    case selection
+}
+
+func sortArray(_ array: [Int], using algorithm: SortAlgorithm = .bubble) -> [Int] {
+    var sortedArray = array
+    
+    switch algorithm {
+    case .bubble:
+        for i in 0..<sortedArray.count {
+            for j in 0..<sortedArray.count - i - 1 {
+                if sortedArray[j] > sortedArray[j + 1] {
+                    let temp = sortedArray[j]
+                    sortedArray[j] = sortedArray[j + 1]
+                    sortedArray[j + 1] = temp
+                }
+            }
+        }
+        
+    case .selection:
+        for i in 0..<sortedArray.count {
+            var minIndex = i
+            for j in i+1..<sortedArray.count {
+                if sortedArray[j] < sortedArray[minIndex] {
+                    minIndex = j
+                }
+            }
+            if minIndex != i {
+                let temp = sortedArray[i]
+                sortedArray[i] = sortedArray[minIndex]
+                sortedArray[minIndex] = temp
+            }
+        }
+    }
+    
+    return sortedArray
+}
+let array = [64, 25, 12, 22, 11]
+
+let bubbleSorted = sortArray(array)
+print("Bubble sorted: \(bubbleSorted)")
+
+let selectionSorted = sortArray(array, using: .selection)
+print("Selection sorted: \(selectionSorted)")
+
+
+
+
+
+//Zavd 3
+func analyzeCharacter(_ ch: Character) {
+    print("Analyzing character: '\(ch)'")
+    
+    let scalar = ch.unicodeScalars.first!.value
+
+    // Check if it's a digit
+    if ch >= "0" && ch <= "9" {
+        print("- This is a digit.")
+    }
+    
+    // Check if it's an English letter
+    else if (ch >= "A" && ch <= "Z") || (ch >= "a" && ch <= "z") {
+        print("- This is an English letter.")
+        if ch >= "A" && ch <= "Z" {
+            print("- It is uppercase.")
+        } else {
+            print("- It is lowercase.")
+        }
+    }
+
+    // Check if it's a Ukrainian letter
+    else if (scalar >= 0x0410 && scalar <= 0x044F) || scalar == 0x0404 || scalar == 0x0454 || scalar == 0x0407 || scalar == 0x0457 || scalar == 0x0406 || scalar == 0x0456 || scalar == 0x0490 || scalar == 0x0491 {
+        print("- This is a Ukrainian letter.")
+        if scalar >= 0x0410 && scalar <= 0x042F || scalar == 0x0404 || scalar == 0x0407 || scalar == 0x0406 || scalar == 0x0490 {
+            print("- It is uppercase.")
+        } else {
+            print("- It is lowercase.")
+        }
+    }
+    
+    else {
+        print("- This is neither a letter nor a digit.")
+    }
+}
+analyzeCharacter("A")
+print("------")
+analyzeCharacter("9")
+print("------")
+analyzeCharacter("@")
+
+
+
+
+
+
+//Zavd 4
+func analyzeString(_ input: String) {
+    var frequency: [Character: Int] = [:]
+
+    for ch in input {
+        if let count = frequency[ch] {
+            frequency[ch] = count + 1
+        } else {
+            frequency[ch] = 1
+        }
+    }
+
+    print("Character | Count")
+    print("-----------------")
+    for (ch, count) in frequency {
+        print("    \(ch)    |   \(count)")
+    }
+}
+let text = "Hello, world! 123"
+analyzeString(text)
+
+
+
+
+
+
+//Zavd 5
+typealias Operation = (Int, Int) -> Int
+
+func add(_ a: Int, _ b: Int) -> Int {
+    return a + b
+}
+
+func subtract(_ a: Int, _ b: Int) -> Int {
+    return a - b
+}
+
+func multiply(_ a: Int, _ b: Int) -> Int {
+    return a * b
+}
+
+func modulo(_ a: Int, _ b: Int) -> Int {
+    return b != 0 ? a % b : 0
+}
+
+func power(_ base: Int, _ exponent: Int) -> Int {
+    if exponent == 0 { return 1 }
+    var result = 1
+    for _ in 1...abs(exponent) {
+        result *= base
+    }
+    return exponent > 0 ? result : 1 
+}
+func calculator(_ a: Int, _ b: Int, operation: Operation) -> Int {
+    return operation(a, b)
+}
+func runMenu(a: Int, b: Int, choice: Int) {
+    var result: Int
+
+    switch choice {
+    case 1:
+        result = add(a, b)
+        print("Result of addition: \(result)")
+    case 2:
+        result = subtract(a, b)
+        print("Result of subtraction: \(result)")
+    case 3:
+        result = multiply(a, b)
+        print("Result of multiplication: \(result)")
+    case 4:
+        result = modulo(a, b)
+        print("Result of modulo: \(result)")
+    case 5:
+        result = power(a, b)
+        print("Result of power: \(result)")
+    default:
+        print("Invalid choice.")
+        return
+    }
+}
+
+let num1 = 2
+let num2 = 5
+let operationChoice = 5 
+runMenu(a: num1, b: num2, choice: operationChoice)
+
+
+
+
+
+
+
+//Zavd 6
+func findLargestCircleContainingPoint(circles: [[Double]], point: [Double]) -> [Double]? {
+    var largestCircle: [Double]? = nil
+
+    for circle in circles {
+        let dx = point[0] - circle[0]
+        let dy = point[1] - circle[1]
+        let distanceSquared = dx * dx + dy * dy
+        let radiusSquared = circle[2] * circle[2]
+
+        if distanceSquared <= radiusSquared {
+            if largestCircle == nil || circle[2] > largestCircle![2] {
+                largestCircle = circle
+            }
+        }
+    }
+
+    return largestCircle
+}
+let circles = [
+    [0.0, 0.0, 3.0],   // центр (0,0), радіус 3
+    [1.0, 1.0, 5.0],   // центр (1,1), радіус 5
+    [2.0, 2.0, 2.0]    // центр (2,2), радіус 2
+]
+
+let point = [1.0, 2.0]
+
+if let result = findLargestCircleContainingPoint(circles: circles, point: point) {
+    print("Largest circle containing the point: Center (\(result[0]), \(result[1])), Radius \(result[2])")
+} else {
+    print("The point is not inside any circle.")
+}
+
+
