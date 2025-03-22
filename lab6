@@ -1,0 +1,213 @@
+//Zavd 1
+import Foundation
+
+// Координати у декартовій системі
+struct CartesianPoint {
+    private(set) var x: Double = 0.0
+    private(set) var y: Double = 0.0
+}
+
+// Координати у полярній системі
+struct PolarPoint {
+    private(set) var radius: Double = 0.0
+    private(set) var angle: Double = 0.0
+}
+
+// Основна структура Точка
+struct Point {
+    private(set) var cartesian: CartesianPoint
+    private(set) var polar: PolarPoint
+
+    // Ініціалізатор з декартових координат
+    init(x: Double, y: Double) {
+        self.cartesian = CartesianPoint(x: x, y: y)
+        let r = sqrt(x * x + y * y)
+        let a = atan2(y, x)
+        self.polar = PolarPoint(radius: r, angle: a)
+    }
+
+    // Ініціалізатор з полярних координат
+    init(radius: Double, angle: Double) {
+        self.polar = PolarPoint(radius: radius, angle: angle)
+        let x = radius * cos(angle)
+        let y = radius * sin(angle)
+        self.cartesian = CartesianPoint(x: x, y: y)
+    }
+
+    // Зсув у декартовій системі
+    mutating func moveBy(x dx: Double, y dy: Double) {
+        let newX = cartesian.x + dx
+        let newY = cartesian.y + dy
+        self = Point(x: newX, y: newY)
+    }
+
+    // Зсув у полярній системі
+    mutating func moveBy(radius dr: Double, angle da: Double) {
+        let newR = polar.radius + dr
+        let newA = polar.angle + da
+        self = Point(radius: newR, angle: newA)
+    }
+
+    // Перетворення в рядок (по замовчуванню — декартова)
+    func toString(system: String = "cartesian") -> String {
+        if system == "polar" {
+            return "Polar(radius: \(polar.radius), angle: \(polar.angle))"
+        } else {
+            return "Cartesian(x: \(cartesian.x), y: \(cartesian.y))"
+        }
+    }
+
+    // Статична функція для обчислення відстані між двома точками
+    static func distance(from p1: Point, to p2: Point) -> Double {
+        let dx = p1.cartesian.x - p2.cartesian.x
+        let dy = p1.cartesian.y - p2.cartesian.y
+        return sqrt(dx * dx + dy * dy)
+    }
+}
+var p1 = Point(x: 3, y: 4)
+print(p1.toString())                      // Cartesian(x: 3.0, y: 4.0)
+print(p1.toString(system: "polar"))       // Polar(radius: 5.0, angle: 0.927...)
+
+var p2 = Point(radius: 2, angle: Double.pi / 4)
+print(p2.toString())
+
+p1.moveBy(x: 1, y: -2)
+print(p1.toString())
+
+p2.moveBy(radius: 1, angle: Double.pi / 4)
+print(p2.toString(system: "polar"))
+
+let d = Point.distance(from: p1, to: p2)
+print("Distance: \(d)")
+
+
+
+
+
+
+
+
+
+
+//Zavd 2
+import Foundation
+
+// Simple Point struct
+struct Point {
+    private(set) var x: Double
+    private(set) var y: Double
+
+    init(x: Double = 0, y: Double = 0) {
+        self.x = x
+        self.y = y
+    }
+
+    static func distance(from a: Point, to b: Point) -> Double {
+        let dx = a.x - b.x
+        let dy = a.y - b.y
+        return sqrt(dx * dx + dy * dy)
+    }
+}
+
+// Shape type enumeration
+enum ShapeType {
+    case unknown
+    case point
+    case line
+    case triangle
+    case quadrilateral
+    case polygon
+}
+
+// Main Shape struct
+struct Shape {
+    private var points: [Point]
+
+    // Computed shape type
+    var type: ShapeType {
+        switch points.count {
+        case 0: return .unknown
+        case 1: return .point
+        case 2: return .line
+        case 3: return .triangle
+        case 4: return .quadrilateral
+        default: return .polygon
+        }
+    }
+
+    // Initializer from array
+    init(points: [Point]) {
+        self.points = points
+    }
+
+    // Initializer from variadic points
+    init(_ points: Point...) {
+        self.points = points
+    }
+
+    // Subscript for accessing points
+    subscript(index: Int) -> Point? {
+        guard index >= 0 && index < points.count else { return nil }
+        return points[index]
+    }
+
+    // Internal access to points
+    fileprivate var allPoints: [Point] {
+        return points
+    }
+}
+
+// Shape calculations
+extension Shape {
+
+    // Static function to compute perimeter
+    static func perimeter(of shape: Shape) -> Double {
+        let pts = shape.allPoints
+        guard pts.count > 1 else { return 0.0 }
+
+        var sum = 0.0
+        for i in 0..<pts.count {
+            let current = pts[i]
+            let next = pts[(i + 1) % pts.count]
+            sum += Point.distance(from: current, to: next)
+        }
+        return sum
+    }
+
+    // Static function to compute area using Shoelace formula
+    static func area(of shape: Shape) -> Double {
+        let pts = shape.allPoints
+        guard pts.count >= 3 else { return 0.0 }
+
+        var sum = 0.0
+        for i in 0..<pts.count {
+            let p1 = pts[i]
+            let p2 = pts[(i + 1) % pts.count]
+            sum += (p1.x * p2.y) - (p1.y * p2.x)
+        }
+        return abs(sum) / 2
+    }
+
+    // Computed property for perimeter
+    var perimeter: Double {
+        return Shape.perimeter(of: self)
+    }
+
+    // Computed property for area
+    var area: Double {
+        return Shape.area(of: self)
+    }
+}
+let a = Point(x: 0, y: 0)
+let b = Point(x: 4, y: 0)
+let c = Point(x: 4, y: 3)
+
+let triangle = Shape(a, b, c)
+
+print("Shape type: \(triangle.type)")
+print("Area: \(triangle.area)")
+print("Perimeter: \(triangle.perimeter)")
+
+if let p = triangle[1] {
+    print("Point 1: (\(p.x), \(p.y))")
+}
