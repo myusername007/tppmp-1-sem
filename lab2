@@ -1,4 +1,5 @@
-//Завдання 1
+//Завдання 1 DONE
+
 import Foundation
 
 // 1. Declare an array 'fibArray' with the first 10 Fibonacci numbers.
