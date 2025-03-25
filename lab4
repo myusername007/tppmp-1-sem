@@ -1,4 +1,5 @@
-import Foundation
+// DONE
+import Foundation   
 
 class Rational: CustomStringConvertible, Equatable, Comparable, NSCopying {
     private(set) var numerator: Int
