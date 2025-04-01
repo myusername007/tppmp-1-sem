@@ -1,4 +1,5 @@
-//Zavd 1 
+//Zavd 1  DONE
+
 func factorial(of number: Int) -> Int {
     var result = 1
     var n = number
